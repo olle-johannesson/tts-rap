@@ -2,8 +2,10 @@ import "./styles.css";
 // import EasySpeech from 'easy-speech'
 import { syllable } from "syllable";
 import loopUrl from 'url:./drum-loop-bpm-91.wav'
-import { group, rndChunk } from "./grouping";
 import { getNormallyDistributedNumber } from "./rnd";
+import orig from 'url:./me.jpeg'
+import rapOpen from 'url:./me_rap_open.png'
+import rapClosed from 'url:./me_rap_closed.png'
 
 let audioContext
 let mainGain
@@ -16,6 +18,25 @@ const syllebleRegex = /[^aeiouy]*[aeiouy]+(?:[^aeiouy]*$|[^aeiouy](?=[^aeiouy]))
 const spRegex = /\w+(?![^a-zA-Z])/;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+const getProfilePic = () => document.querySelector('#profile-picture')
+
+const changeImage = (newImgUrl) => {
+  let img = getProfilePic()
+  img.src = newImgUrl
+}
+
+const setRapOpen = () => {
+  changeImage(rapOpen)
+}
+
+const setRapClosed = () => {
+  changeImage(rapClosed)
+}
+
+const restoreProfilePic = () => {
+  changeImage(orig)
+}
 
 const intiAudioContext = () => {
   if (!audioContext) {
@@ -31,22 +52,15 @@ const say = async (word = "", numberOfSyllablesInWord = 1, pitch = 1) => {
   if (!synth || !part) {
     return;
   }
+  //voice = synth.getVoices().find(({ name }) => name === "Eddy (English (US))");
   let utterance = new SpeechSynthesisUtterance(part);
-  //voice = synth.getVoices().find(({ lang }) => lang === "en-US");
-  voice = synth.getVoices().find(({ name }) => name === "Ralph");
   utterance.voice = voice;
-  if (numberOfSyllablesInWord >= 2) {
-    //utterance.pitch = Math.abs(getNormallyDistributedNumber(1, 0.6))
-    utterance.rate = 0.8 + numberOfSyllablesInWord * 0.2;
-  } else {
-    //utterance.pitch = getNormallyDistributedNumber(1, 0.3)
-    utterance.rate = 1
-  }
+  utterance.rate = numberOfSyllablesInWord >= 2 ? 0.8 + numberOfSyllablesInWord * 0.2 : 1
   utterance.pitch = pitch
-  //utterance.rate = 0.8 + numberOfSyllablesInWord * 0.3;
-    // Always set the utterance language to the utterance voice's language
-    // to prevent unspecified behavior.  
   utterance.lang = utterance.voice.lang
+  utterance.addEventListener('start', setRapOpen)
+  utterance.addEventListener('end', setRapClosed)
+
   synth.speak(utterance);
 };
 
@@ -67,13 +81,17 @@ const playBeat = async () => {
   beatSource.start()
 }
 
-const rap = async () => {
+const rap = async (btn) => {
+  setRapClosed()
+  console.log(synth.getVoices().filter(v => v.lang === 'en-US').map(v => v.name))
+  voice = synth.getVoices().filter(v => v.lang === 'en-US').filter(() => Math.random() < 0.5)[0]
+
   // await EasySpeech.init({ maxTimeout: 5000, interval: 250 })
   const textNode = document.getElementById("text");
   const text = textNode.innerText;
   const quarterBeat = (bpm) => (1000 / bpm) * 60;
-  const halfBeat = (bpm) => quarterBeat(bpm) * 2
-  const eigthBeat = (bpm) => quarterBeat(bpm) / 2
+  // const halfBeat = (bpm) => quarterBeat(bpm) * 2
+  // const eigthBeat = (bpm) => quarterBeat(bpm) / 2
 
   btn.disabled = true
   const syllabledwords = text.split(/([,.])/).map(n => n.split(' ')).flat().filter(Boolean).map(word => syllable(word) > 1
@@ -85,11 +103,8 @@ const rap = async () => {
   intiAudioContext()
   playBeat()    
   for (let [index, word] of words.entries()) {
-    //synth.stop()
     lightLamp(index % 4)
     const beatTime = quarterBeat(91);
-    
-    // word.forEach((syllable, index) => setTimeout(() => say(syllable, word.length), (index + 1) * (beatTime / word.length)))
     let pitch = Math.abs(getNormallyDistributedNumber(1, 0.3))
     for (let syllable of word) {
       say(syllable, word.length, pitch)
@@ -98,12 +113,13 @@ const rap = async () => {
   }
   btn.disabled = false
   beatSource.stop()
+  restoreProfilePic()
 }
 
 const init = () => {
   synth = window.speechSynthesis
   const btn = document.getElementById("btn");  
-  btn.addEventListener("click", rap);
+  btn.addEventListener("click", () => rap(btn));
 };
 
 window.onload = init;
