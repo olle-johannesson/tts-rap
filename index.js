@@ -1,7 +1,7 @@
 import "./styles.css";
 // import EasySpeech from 'easy-speech'
 import { syllable } from "syllable";
-import loopUrl from 'url:./drum-loop-bpm-90.wav'
+import loopUrl from 'url:./drum-loop-bpm-91.wav'
 import { group, rndChunk } from "./grouping";
 import { getNormallyDistributedNumber } from "./rnd";
 
@@ -87,7 +87,7 @@ const rap = async () => {
   for (let [index, word] of words.entries()) {
     //synth.stop()
     lightLamp(index % 4)
-    const beatTime = quarterBeat(90);
+    const beatTime = quarterBeat(91);
     
     // word.forEach((syllable, index) => setTimeout(() => say(syllable, word.length), (index + 1) * (beatTime / word.length)))
     let pitch = Math.abs(getNormallyDistributedNumber(1, 0.3))
