@@ -1,0 +1,17 @@
+{
+  "name": "rap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Olle Johannesson",
+  "license": "ISC",
+  "dependencies": {
+    "easy-speech": "^1.2.0",
+    "parcel": "^2.8.0",
+    "syllable": "^5.0.1"
+  }
+}
