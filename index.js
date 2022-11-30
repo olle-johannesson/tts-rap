@@ -1,6 +1,6 @@
-import "./styles.css";
-// import EasySpeech from 'easy-speech'
-import { syllable } from "syllable";
+import "./vitestyle.css";
+import EasySpeech from 'easy-speech'
+import {syllable} from "syllable";
 import loopUrl from 'url:./drum-loop-bpm-91.wav'
 import { getNormallyDistributedNumber } from "./rnd";
 import orig from 'url:./me.jpeg'

@@ -33,3 +33,14 @@ body > * {
   align-items: center;
 }
 
+#text {
+  transition: background-color .2s ease;
+}
+
+#text:hover {
+  background-color: lightcyan;
+  border-radius: 5px;
+}
+
+
+
