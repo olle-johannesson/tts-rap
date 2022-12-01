@@ -6,6 +6,8 @@ import {breakUpSyllables, replaceSeparatorsWithSpace, splitOnWordsButRetainSepar
 import {spRegex} from "./regexes"
 
 let isPlaying = false
+const playButton = document.createElement('button')
+const stopButton = document.createElement('button')
 
 const onFail = () => {
     // TODO: what to do here?
@@ -39,7 +41,7 @@ const rap = async () => {
     const text = document.getElementById("text").innerText
     const quarterBeat = (bpm) => (1000 / bpm) * 60
     const words = breakUpSyllables(replaceSeparatorsWithSpace(splitOnWordsButRetainSeparators(text))) //rndChunk(syllabledwords)
-    await drums.play()
+    await drums.play(stop)
     for (let word of words) {
         if (!isPlaying) {
             break
@@ -56,14 +58,13 @@ const rap = async () => {
 
 const stop = () => {
     isPlaying = false
+    stopButton.replaceWith(playButton)
     drums.stop()
     EasySpeech.cancel()
-    sleep(100).then(profilePic.restore)
+    sleep(500).then(profilePic.restore)
 }
 
 const loadApp = () => {
-    const playButton = document.createElement('button')
-    const stopButton = document.createElement('button')
     playButton.setAttribute('id', 'btn')
     stopButton.setAttribute('id', 'btn')
     playButton.innerHTML = 'PLAY'

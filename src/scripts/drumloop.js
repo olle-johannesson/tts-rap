@@ -1,4 +1,5 @@
 import loopUrl from 'url:../assets/drum-loop-bpm-91.wav'
+import {restore} from "./profilepic";
 
 let audioContext
 let mainGain
@@ -17,7 +18,7 @@ const withAudio = fn => (...args) => {
     init().then(() => fn(...args))
 }
 
-export const play = withAudio(async () => {
+export const play = withAudio(async (onEnded) => {
     const response = await fetch(loopUrl)
     const soundBuffer = await response.arrayBuffer()
     const beatBuffer = await audioContext.decodeAudioData(soundBuffer)
@@ -25,6 +26,7 @@ export const play = withAudio(async () => {
     beatSource.buffer = beatBuffer
     beatSource.connect(mainGain)
     beatSource.loop = true
+    beatSource.onended = onEnded
     beatSource.start()
 })
 
