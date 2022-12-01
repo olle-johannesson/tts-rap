@@ -5,6 +5,7 @@ import * as profilePic from './profilepic'
 import {breakUpSyllables, replaceSeparatorsWithSpace, splitOnWordsButRetainSeparators} from "./testParse"
 import {spRegex} from "./regexes"
 
+let isPlaying = false
 
 const onFail = () => {
     // TODO: what to do here?
@@ -16,7 +17,7 @@ if (!(speech.speechSynthesis && speech.speechSynthesisUtterance && speech.speech
     onFail()
 }
 
-const ease = x => x < 3 ? ((1)/(2))+((Math.sin(((Math.PI)/(2)) * x - Math.PI))/(2)) : 1
+const ease = x => x < 3 ? ((1) / (2)) + ((Math.sin(((Math.PI) / (2)) * x - Math.PI)) / (2)) : 1
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
@@ -30,19 +31,19 @@ const say = async (word = "", numberOfSyllablesInWord = 1, pitch = 1) => {
         text: part,
         rate: 1 + ease(numberOfSyllablesInWord), // numberOfSyllablesInWord >= 2 ? 0.8 + numberOfSyllablesInWord * 0.2 : 1,
         start: profilePic.openMouth,
-        end: profilePic.closeMouth
+        end: profilePic.closeMouth,
     })
 }
 
-const rap = async (btn) => {
-    btn.innerHTML = "STOP"
-    btn.addEventListener('click', () => stop(btn), {once: true})
+const rap = async () => {
     const text = document.getElementById("text").innerText
     const quarterBeat = (bpm) => (1000 / bpm) * 60
     const words = breakUpSyllables(replaceSeparatorsWithSpace(splitOnWordsButRetainSeparators(text))) //rndChunk(syllabledwords)
-    drums.init()
-    drums.play()
+    await drums.play()
     for (let word of words) {
+        if (!isPlaying) {
+            break
+        }
         const beatTime = quarterBeat(91)
         let pitch = 1 //Math.abs(getNormallyDistributedNumber(1, 0.3))
         for (let syllable of word) {
@@ -50,20 +51,35 @@ const rap = async (btn) => {
             await sleep(beatTime / word.length)
         }
     }
-    stop(btn)
+    stop()
 }
 
-const stop = (btn) => {
-    profilePic.restore()
-    btn.disabled = false
+const stop = () => {
+    isPlaying = false
     drums.stop()
-    btn.innerHTML = "Click me"
-    btn.addEventListener('click', () => rap(btn), {once: true})
+    EasySpeech.cancel()
+    sleep(100).then(profilePic.restore)
 }
 
 const loadApp = () => {
-    const btn = document.getElementById("btn")
-    btn.addEventListener("click", () => rap(btn), {once: true})
+    const playButton = document.createElement('button')
+    const stopButton = document.createElement('button')
+    playButton.setAttribute('id', 'btn')
+    stopButton.setAttribute('id', 'btn')
+    playButton.innerHTML = 'PLAY'
+    stopButton.innerHTML = 'STOP'
+
+    playButton.addEventListener('click', () => {
+        isPlaying = true
+        rap();
+        playButton.replaceWith(stopButton);
+    })
+    stopButton.addEventListener('click', () => {
+        stop();
+        stopButton.replaceWith(playButton);
+    })
+
+    document.querySelector('main').appendChild(playButton)
 }
 
 window.onload = () => {

@@ -4,7 +4,7 @@ let audioContext
 let mainGain
 let beatSource
 
-export const init = () => {
+const init = async () => {
     if (!audioContext) {
         audioContext = new AudioContext()
         mainGain = audioContext.createGain()
@@ -13,7 +13,11 @@ export const init = () => {
     }
 }
 
-export const play = async () => {
+const withAudio = fn => (...args) => {
+    init().then(() => fn(...args))
+}
+
+export const play = withAudio(async () => {
     const response = await fetch(loopUrl)
     const soundBuffer = await response.arrayBuffer()
     const beatBuffer = await audioContext.decodeAudioData(soundBuffer)
@@ -22,8 +26,8 @@ export const play = async () => {
     beatSource.connect(mainGain)
     beatSource.loop = true
     beatSource.start()
-}
+})
 
-export const stop = () => {
-    beatSource.stop()
-}
+export const stop = withAudio(() => {
+    beatSource?.stop()
+})
