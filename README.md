@@ -4,5 +4,5 @@ to start
 
 ```
 $ npm install
-$ npx parcel index.html
+$ npm start
 ```
