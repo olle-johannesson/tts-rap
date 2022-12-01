@@ -13,10 +13,10 @@
   "license": "ISC",
   "dependencies": {
     "easy-speech": "^1.2.0",
-    "parcel": "^2.8.0",
     "syllable": "^5.0.1"
   },
   "devDependencies": {
+    "parcel": "^2.8.0",
     "rimraf": "^3.0.2"
   }
 }
