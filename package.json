@@ -4,8 +4,9 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "parcel index.html",
-    "build": "rimraf dist && rimraf .parcel-cache && parcel build index.html --no-source-maps"
+    "start": "parcel src/index.html",
+    "clean": "rimraf dist && rimraf public && rimraf .parcel-cache",
+    "build": "npm run-script clean && parcel build src/index.html --no-source-maps"
   },
   "keywords": [],
   "author": "Olle Johannesson",

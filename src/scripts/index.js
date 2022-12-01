@@ -1,4 +1,4 @@
-import "./vitestyle.css"
+import "../styles/vitestyle.css"
 import EasySpeech from 'easy-speech'
 import * as drums from './drumloop'
 import * as profilePic from './profilepic'

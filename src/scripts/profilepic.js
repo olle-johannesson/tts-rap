@@ -1,6 +1,6 @@
-import orig from './me.jpeg'
-import rapOpen from './me_rap_open.png'
-import rapClosed from './me_rap_closed.png'
+import orig from '../assets/me.jpeg'
+import rapOpen from '../assets/me_rap_open.png'
+import rapClosed from '../assets/me_rap_closed.png'
 
 export const getProfilePic = () => document.querySelector('#profile-picture')
 

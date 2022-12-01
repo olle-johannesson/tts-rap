@@ -1,4 +1,4 @@
-import loopUrl from 'url:./drum-loop-bpm-91.wav'
+import loopUrl from 'url:../assets/drum-loop-bpm-91.wav'
 
 let audioContext
 let mainGain
