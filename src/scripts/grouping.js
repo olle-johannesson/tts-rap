@@ -15,21 +15,20 @@ export let group = (a, decider = () => true) => {
   return b.filter(k => k.length)
 }
 
-export let rndChunk = (a) => {
+export let rndChunk = (input) => {
   let rnd = () => Math.abs(Math.floor(getNormallyDistributedNumber(1,0.5))) + 1
-  let b = []
-  let i = 0
-  while(i < a.length) {
-    let n = 1,
-        t = a[i]
-    if (!Array.isArray(t)) {
+  let output = [], i = 0
+  while(i < input.length) {
+    let chunkSize = 1, chunk = input[i]
+    if (!Array.isArray(chunk)) {
+      chunkSize = rnd() + 1
       do {
-        n = rnd()
-        t = a.slice(i, i + n)
-      } while(t.some(Array.isArray))
+        chunkSize -= 1
+        chunk = input.slice(i, i + chunkSize)
+      } while(chunk.some(Array.isArray))
     }
-    b.push(t)
-    i += n
+    output.push(chunk)
+    i += chunkSize
   }
-  return b.filter(Boolean)
+  return output.filter(Boolean)
 }

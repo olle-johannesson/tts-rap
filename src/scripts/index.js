@@ -5,8 +5,10 @@ import * as profilePic from './profilepic'
 import {breakUpSyllables, replaceSeparatorsWithSpace, splitOnWordsButRetainSeparators} from "./testParse"
 import {spRegex} from "./regexes"
 import {rndChunk} from "./grouping.js";
+import {getNormallyDistributedNumber} from "./rnd.js";
 
 let isPlaying = false
+let voice
 const playButton = document.createElement('button')
 const stopButton = document.createElement('button')
 
@@ -32,6 +34,7 @@ const say = async (word = ",", numberOfSyllablesInWord = 1, pitch = 1) => {
     EasySpeech.speak({
         pitch,
         text: part,
+        voice,
         rate: 1 + ease(numberOfSyllablesInWord), // numberOfSyllablesInWord >= 2 ? 0.8 + numberOfSyllablesInWord * 0.2 : 1,
         start: profilePic.openMouth,
         end: profilePic.closeMouth,
@@ -40,15 +43,19 @@ const say = async (word = ",", numberOfSyllablesInWord = 1, pitch = 1) => {
 
 const rap = async () => {
     const text = document.getElementById("text").innerText
+    voice = getRnd(EasySpeech.voices().filter(v => v.lang === 'en-US'))
     const quarterBeat = (bpm) => (1000 / bpm) * 60
+    let pitch = 1
     let words = breakUpSyllables(replaceSeparatorsWithSpace(splitOnWordsButRetainSeparators(text)), false) //rndChunk(syllabledwords)
     await drums.play(stop)
-    for (let word of rndChunk(words)) {
+    words = rndChunk(words)
+    for (let word of words) {
         if (!isPlaying) {
             break
         }
         const beatTime = quarterBeat(91)
-        let pitch = 1 //Math.abs(getNormallyDistributedNumber(1, 0.3))
+        pitch += getNormallyDistributedNumber(0, 0.2)
+        pitch = Math.max(0, Math.min(2, pitch))
         for (let syllable of word) {
             say(syllable, word.length, pitch)
             await sleep(beatTime / word.length)
@@ -90,3 +97,4 @@ window.onload = () => {
         .catch(onFail)
 }
 
+const getRnd = a => a[Math.floor(Math.random() * a.length)]
