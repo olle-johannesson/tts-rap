@@ -29,6 +29,8 @@ export const splitOnWordsButRetainSeparators = text => text
 
 export const replaceSeparatorsWithSpace = text => replaceCommaWithSpace(replaceDotsWithSpace(text))
 
-export const breakUpSyllables = text => [text].flat().map(word => syllable(word) > 1
+export const breakUpSyllables = (text, singleSyllableWordsAsArrays = true) => [text].flat().map(word => syllable(word) > 1
     ? [...word.matchAll(syllebleRegex)].map(n => n[0])
-    : [word])
+    : singleSyllableWordsAsArrays
+        ? [word]
+        : word)

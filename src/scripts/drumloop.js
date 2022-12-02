@@ -1,5 +1,4 @@
-import loopUrl from 'url:../assets/drum-loop-bpm-91.wav'
-import {restore} from "./profilepic";
+import loopUrl from '../assets/drum-loop-bpm-91.mp4'
 
 let audioContext
 let mainGain

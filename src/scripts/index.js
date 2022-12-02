@@ -4,6 +4,7 @@ import * as drums from './drumloop'
 import * as profilePic from './profilepic'
 import {breakUpSyllables, replaceSeparatorsWithSpace, splitOnWordsButRetainSeparators} from "./testParse"
 import {spRegex} from "./regexes"
+import {rndChunk} from "./grouping.js";
 
 let isPlaying = false
 const playButton = document.createElement('button')
@@ -23,7 +24,7 @@ const ease = x => x < 3 ? ((1) / (2)) + ((Math.sin(((Math.PI) / (2)) * x - Math.
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
-const say = async (word = "", numberOfSyllablesInWord = 1, pitch = 1) => {
+const say = async (word = ",", numberOfSyllablesInWord = 1, pitch = 1) => {
     const part = numberOfSyllablesInWord > 1
         ? spRegex.exec(word)?.[0]
         : word
@@ -40,9 +41,9 @@ const say = async (word = "", numberOfSyllablesInWord = 1, pitch = 1) => {
 const rap = async () => {
     const text = document.getElementById("text").innerText
     const quarterBeat = (bpm) => (1000 / bpm) * 60
-    const words = breakUpSyllables(replaceSeparatorsWithSpace(splitOnWordsButRetainSeparators(text))) //rndChunk(syllabledwords)
+    let words = breakUpSyllables(replaceSeparatorsWithSpace(splitOnWordsButRetainSeparators(text)), false) //rndChunk(syllabledwords)
     await drums.play(stop)
-    for (let word of words) {
+    for (let word of rndChunk(words)) {
         if (!isPlaying) {
             break
         }

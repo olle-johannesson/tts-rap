@@ -16,16 +16,20 @@ export let group = (a, decider = () => true) => {
 }
 
 export let rndChunk = (a) => {
-  let rnd = () => Math.abs(Math.floor(getNormallyDistributedNumber(1,1))) + 1
+  let rnd = () => Math.abs(Math.floor(getNormallyDistributedNumber(1,0.5))) + 1
   let b = []
   let i = 0
-  while(i < a.length - 1) {
-    
-      let n = rnd()
-      
-
-      b.push(a.slice(i, i+n))
-      i += n
+  while(i < a.length) {
+    let n = 1,
+        t = a[i]
+    if (!Array.isArray(t)) {
+      do {
+        n = rnd()
+        t = a.slice(i, i + n)
+      } while(t.some(Array.isArray))
+    }
+    b.push(t)
+    i += n
   }
-  return b
+  return b.filter(Boolean)
 }

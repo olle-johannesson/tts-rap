@@ -1,22 +1,25 @@
 {
   "name": "rap",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "parcel src/index.html",
-    "clean": "rimraf dist && rimraf public && rimraf .parcel-cache",
-    "build": "npm run-script clean && parcel build src/index.html --no-source-maps"
+    "start": "vite",
+    "clean": "rimraf dist && rimraf public",
+    "build": "npm run-script clean && vite build"
   },
   "keywords": [],
   "author": "Olle Johannesson",
   "license": "ISC",
   "dependencies": {
     "easy-speech": "^1.2.0",
-    "syllable": "^5.0.1"
+    "syllable": "^5.0.1",
+    "vite-plugin-pwa": "^0.13.3"
   },
   "devDependencies": {
-    "parcel": "^2.8.0",
-    "rimraf": "^3.0.2"
+    "@chialab/esbuild-plugin-html": "^0.17.2",
+    "rimraf": "^3.0.2",
+    "vite": "^3.2.4"
   }
 }
