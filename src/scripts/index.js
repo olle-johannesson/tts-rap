@@ -14,7 +14,7 @@ const stopButton = document.createElement('button')
 
 const onFail = () => {
     // TODO: what to do here?
-    window.history.back()
+ //   window.history.back()
 }
 
 const speech = EasySpeech.detect()
